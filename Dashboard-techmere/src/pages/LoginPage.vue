@@ -5,6 +5,8 @@ import { authService } from '@/services/auth'
 
 const router = useRouter()
 
+const LOGIN_SIMULATION_DELAY = 500
+
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
@@ -16,7 +18,7 @@ const handleLogin = async (e: Event) => {
   isLoading.value = true
 
   // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 500))
+  await new Promise(resolve => setTimeout(resolve, LOGIN_SIMULATION_DELAY))
 
   const result = authService.login({
     email: email.value,

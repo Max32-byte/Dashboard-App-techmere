@@ -32,6 +32,19 @@ const users: { [key: string]: { password: string; name: string } } = {
   },
 }
 
+// Validate user object structure
+const isValidUser = (obj: unknown): obj is User => {
+  if (typeof obj !== 'object' || obj === null) {
+    return false
+  }
+  const user = obj as Record<string, unknown>
+  return (
+    typeof user.id === 'string' &&
+    typeof user.email === 'string' &&
+    typeof user.name === 'string'
+  )
+}
+
 class AuthService {
   private currentUser: User | null = null
 
@@ -39,7 +52,18 @@ class AuthService {
     // Try to restore user from localStorage on initialization
     const storedUser = localStorage.getItem('currentUser')
     if (storedUser) {
-      this.currentUser = JSON.parse(storedUser)
+      try {
+        const parsed = JSON.parse(storedUser)
+        if (isValidUser(parsed)) {
+          this.currentUser = parsed
+        } else {
+          // Clear invalid data from localStorage
+          localStorage.removeItem('currentUser')
+        }
+      } catch (error) {
+        // Clear corrupted data from localStorage
+        localStorage.removeItem('currentUser')
+      }
     }
   }
 
@@ -53,6 +77,9 @@ class AuthService {
       }
     }
 
+    // WARNING: Plain text password comparison is insecure for production use.
+    // In a real application, passwords should be hashed (using bcrypt, argon2, etc.)
+    // and securely compared on the server side, never in client-side code.
     if (user.password !== credentials.password) {
       return {
         success: false,
