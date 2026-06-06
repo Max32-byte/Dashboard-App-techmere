@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type NavigationGuardNext, type RouteLocationNormalized } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
 import LoginPage from '@/pages/LoginPage.vue'
 import DashboardPage from '@/pages/DashboardPage.vue'
 import { authService } from '@/services/auth'
@@ -28,22 +28,18 @@ const router = createRouter({
 })
 
 // Route guard to protect authenticated routes
-router.beforeEach(
-  (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    const isAuthenticated = authService.isAuthenticated()
-    const requiresAuth = to.meta.requiresAuth
+router.beforeEach((to: RouteLocationNormalized) => {
+  const isAuthenticated = authService.isAuthenticated()
+  const requiresAuth = to.meta.requiresAuth
 
-    if (requiresAuth && !isAuthenticated) {
-      // Redirect to login if trying to access protected route without auth
-      next('/login')
-    } else if (to.path === '/login' && isAuthenticated) {
-      // Redirect to dashboard if trying to access login while authenticated
-      next('/dashboard')
-    } else {
-      next()
-    }
+  if (requiresAuth && !isAuthenticated) {
+    // Redirect to login if trying to access protected route without auth
+    return '/login'
+  } else if (to.path === '/login' && isAuthenticated) {
+    // Redirect to dashboard if trying to access login while authenticated
+    return '/dashboard'
   }
-)
+})
 
 export default router
 
