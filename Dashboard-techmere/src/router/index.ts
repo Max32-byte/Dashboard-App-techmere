@@ -10,33 +10,29 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginPage,
-      beforeEnter: (to, from, next) => {
-        const { isAuthenticated } = useAuth()
-        if (isAuthenticated.value) {
-          next({ name: 'dashboard' })
-        } else {
-          next()
-        }
-      },
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardPage,
-      beforeEnter: (to, from, next) => {
-        const { isAuthenticated } = useAuth()
-        if (!isAuthenticated.value) {
-          next({ name: 'login' })
-        } else {
-          next()
-        }
-      },
     },
     {
       path: '/',
       redirect: '/dashboard',
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const { isAuthenticated } = useAuth()
+
+  if (to.name === 'dashboard' && !isAuthenticated.value) {
+    next({ name: 'login' })
+  } else if (to.name === 'login' && isAuthenticated.value) {
+    next({ name: 'dashboard' })
+  } else {
+    next()
+  }
 })
 
 export default router

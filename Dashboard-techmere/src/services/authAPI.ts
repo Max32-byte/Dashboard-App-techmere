@@ -9,8 +9,12 @@ async function handleResponse(response: Response) {
         errorMessage = errorData.message
       } else if (errorData.error) {
         errorMessage = errorData.error
-      } else if (Array.isArray(errorData.errors)) {
-        errorMessage = Object.values(errorData.errors).flat().join(', ')
+      } else if (errorData.errors) {
+        if (Array.isArray(errorData.errors)) {
+          errorMessage = errorData.errors.join(', ')
+        } else {
+          errorMessage = Object.values(errorData.errors).flat().join(', ')
+        }
       }
     } catch {
       // If response is not JSON, use status text
@@ -64,3 +68,4 @@ export const authAPI = {
     return handleResponse(response)
   },
 }
+
