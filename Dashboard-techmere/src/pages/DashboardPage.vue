@@ -1,17 +1,8 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import Navbar from '@/components/Navbar.vue'
 
-const router = useRouter()
-const { isAuthenticated, user } = useAuth()
-
-onMounted(() => {
-  if (!isAuthenticated.value) {
-    router.push({ name: 'login' })
-  }
-})
+const { user } = useAuth()
 </script>
 
 <template>

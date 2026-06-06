@@ -1,5 +1,26 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
+async function handleResponse(response: Response) {
+  if (!response.ok) {
+    let errorMessage = `HTTP ${response.status}`
+    try {
+      const errorData = await response.json()
+      if (errorData.message) {
+        errorMessage = errorData.message
+      } else if (errorData.error) {
+        errorMessage = errorData.error
+      } else if (Array.isArray(errorData.errors)) {
+        errorMessage = Object.values(errorData.errors).flat().join(', ')
+      }
+    } catch {
+      // If response is not JSON, use status text
+      errorMessage = response.statusText || errorMessage
+    }
+    throw new Error(errorMessage)
+  }
+  return response.json()
+}
+
 export const authAPI = {
   async logout(): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/logout`, {
@@ -12,9 +33,7 @@ export const authAPI = {
       credentials: 'include',
     })
 
-    if (!response.ok) {
-      throw new Error(`Logout failed: ${response.statusText}`)
-    }
+    await handleResponse(response)
   },
 
   async login(email: string, password: string): Promise<{ user: { id: number; name: string; email: string } }> {
@@ -29,11 +48,7 @@ export const authAPI = {
       body: JSON.stringify({ email, password }),
     })
 
-    if (!response.ok) {
-      throw new Error(`Login failed: ${response.statusText}`)
-    }
-
-    return response.json()
+    return handleResponse(response)
   },
 
   async getUser(): Promise<{ user: { id: number; name: string; email: string } }> {
@@ -46,10 +61,6 @@ export const authAPI = {
       credentials: 'include',
     })
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch user: ${response.statusText}`)
-    }
-
-    return response.json()
+    return handleResponse(response)
   },
 }
