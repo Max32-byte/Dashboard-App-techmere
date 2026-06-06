@@ -26,20 +26,37 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <nav style="background-color: #f5f5f5; padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd;">
+  <nav
+    style="
+      background-color: #f5f5f5;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    "
+  >
     <div>
-      <h2 style="margin: 0;">Dashboard</h2>
+      <h2 style="margin: 0">Dashboard</h2>
     </div>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <span v-if="user" style="font-weight: 500;">{{ user.name }}</span>
+    <div style="display: flex; align-items: center; gap: 1rem">
+      <span v-if="user" style="font-weight: 500">{{ user.name }}</span>
       <button
         @click="handleLogout"
         :disabled="isLoading"
-        style="padding: 0.5rem 1rem; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;"
+        style="
+          padding: 0.5rem 1rem;
+          background-color: #dc3545;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+        "
       >
         {{ isLoading ? 'Logging out...' : 'Logout' }}
       </button>
-      <span v-if="error" style="color: red; font-size: 12px;">{{ error }}</span>
+      <span v-if="error" style="color: red; font-size: 12px">{{ error }}</span>
     </div>
   </nav>
 </template>

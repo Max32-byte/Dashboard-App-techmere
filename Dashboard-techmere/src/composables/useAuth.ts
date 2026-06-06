@@ -8,7 +8,7 @@ const initAuth = () => {
   try {
     const storedAuth = localStorage.getItem('isAuthenticated')
     const storedUser = localStorage.getItem('user')
-    
+
     if (storedAuth === 'true' && storedUser) {
       isAuthenticated.value = true
       user.value = JSON.parse(storedUser)

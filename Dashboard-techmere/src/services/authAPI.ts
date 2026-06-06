@@ -31,7 +31,7 @@ export const authAPI = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
       },
       credentials: 'include',
@@ -40,12 +40,15 @@ export const authAPI = {
     await handleResponse(response)
   },
 
-  async login(email: string, password: string): Promise<{ user: { id: number; name: string; email: string } }> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ user: { id: number; name: string; email: string } }> {
     const response = await fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
       },
       credentials: 'include',
@@ -59,7 +62,7 @@ export const authAPI = {
     const response = await fetch(`${API_BASE_URL}/user`, {
       method: 'GET',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
       },
       credentials: 'include',
@@ -68,4 +71,3 @@ export const authAPI = {
     return handleResponse(response)
   },
 }
-
